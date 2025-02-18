@@ -13,7 +13,8 @@ This project consists of two main parts:
 
 1. Implementing an autocomplete that, based on a user’s input, returns a list of possible categories based on the beginning of a word.
 2. Retrieving and displaying all of the data related to the category selected by the user.
-3. The program should use at least one of these data structures: Linked List, Hash Map, Tree.
+
+The program should also use at least one of these data structures: Linked List, Hash Map, Tree.
 
 ## Think of an idea
 I'm going to build a recommendation program that helps users find music they might want to listen to.
@@ -26,3 +27,9 @@ A first-pass guess at the functionality is:
 3. Show the options as a numbered list and ask the user to choose an option, or zero to try again.
 4. Once the user chooses a music category, they'll be shown a list of popular (fictional) albums from that category.
 5. To improve the user experience, the program will include input validation and easy ways to choose other categories or quit.
+
+## Autocomplete
+- This turned out to be a one-liner using "sub_string in string" and a list comprehension.
+
+## Category retrieval
+- To do
