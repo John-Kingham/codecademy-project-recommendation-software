@@ -29,7 +29,8 @@ A first-pass guess at the functionality is:
 5. To improve the user experience, the program will include input validation and easy ways to choose other categories or quit.
 
 ## Autocomplete
-- This turned out to be a one-liner using "sub_string in string" and a list comprehension.
+- This turned out to be a one-liner using "search_string in string" and a list comprehension.
+- I needed to create a database of music categories and imaginary albums, so I asked GitHub Copilot and Microsoft Copilot, and between then they generated the appropriate content and Python lists.
 
 ## Category retrieval
 - To do
