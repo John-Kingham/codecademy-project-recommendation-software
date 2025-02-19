@@ -8,37 +8,47 @@ In this portfolio project, you will research, brainstorm, and build a basic reco
 
 After you finish building the program, you will create a blog post to share the program on a publication of your choice.
 
-## Technical requirements
-This project consists of two main parts:
+## Requirements
 
-1. Implementing an autocomplete that, based on a user’s input, returns a list of possible categories based on the beginning of a word.
-2. Retrieving and displaying all of the data related to the category selected by the user.
+**This recommendation program will help users find music they might want to listen to.**
 
-Given that this project comes at the end of the data structures and algorithms lessons, the requirement below is the most important part of the project: 
+Mapping Codecademy's requirements onto the music recommendation program gives the following:
 
-**The program should use at least one of these data structures: Linked List, Hash Map, Tree.**
+### Functional Requirement 1: Choose Music Category
+- The user enters the full or partial name of a music category they're interested in. For example, they might enter "rock" or "classic".
+- If the user's input is invalid or doesn't match any categories, they will be given the option of entering a new search or quitting the program.
+- If the user's input matches one category, they will be told the name of that category and shown a list of albums from that category.
+- If the user's input matches many categories, they will be shown a list of those categories and given the option of selecting one. For example, a search for "rock" might return a list of categories including "hard rock", "soft rock" and "rock & roll".
 
-## Think of an idea
-I'm going to build a recommendation program that helps users find music they might want to listen to.
+### Functional Requirement 2: Show Albums
+- The user selects a specific music category using the Choose Music Category process.
+- The program shows the user a list of albums from that category.
+- The program then asks the user if they want to search again, or quit, and proceeds as requested.
 
-## Project brainstorming
-A first-pass guess at the functionality is:
+### Technical Requirements
+As requested by Codecademy:
+1. The program should be written in Python.
+2. The program should use a command line interface.
+3. The program should use at least one of these data structures: Linked List, Hash Map, Tree.
 
-1. Show a welcome message to the user
-2. Ask the user to enter the beginning letter(s) of a music category. For example, if they just enter "r", they'll be shown a list of categories to choose from that start with "r", such as rock and reggae.
-3. Show the options as a numbered list and ask the user to choose an option, or zero to try again.
-4. Once the user chooses a music category, they'll be shown a list of popular (fictional) albums from that category.
-5. To improve the user experience, the program will include input validation and easy ways to choose other categories or quit.
+## Architecture
+- Programming language: Python 3
+  - As required
+- User interface: Command line (required by Codecademy)
+  - As required
+- Programming paradigm: Object-oriented and procedural
+  - Object-oriented because the program will use linked lists and I've learned to build linked-lists using an object-oriented approach.
+  - Procedural because this is a small program that can run as a simple "main" function.
+- Database: Python lists
+  - This was Codecademy's default choice so I went with that.
 
-## Autocomplete
-- This turned out to be a one-liner using "search_string in string" and a list comprehension.
-- I needed to create a database of music categories and imaginary albums, so I asked GitHub Copilot and Microsoft Copilot, and between then they generated the appropriate content and Python lists.
+## High-level design
 
-## Category retrieval
-Here are some initial thoughts:
-- This needs to use either a Linked List, a Hash Map or a Tree.
-- The albums in a category could be stored in a linked list.
-- Each node's value would be a Python list containing the album's four data items (name, artist, release date).
-- We could store each linked list in a hash map, keyed by category name.
-- Once the user has chosen a category, we can use that as a key to look for the album linked list in the hash map. 
-- Once we have the linked list of albums, we can traverse through the list and print out all the data.
+The program will:
+- Use a "main" function to manage user interaction.
+- Use helper functions as needed to simplify the main function.
+- Store several pieces of album data in a list.
+- Store all of the album data lists for a category in an object-oriented linked list.
+  - The linked list will consist of Node and LinkedList classes.
+- Store the category linked lists in a hashmap keyed by category name.
+  - The hashmap will be implemented as a HashMap class that uses open addressing to resolve collisions. 
