@@ -5,21 +5,20 @@ from linked_list import LinkedList, Node
 class TestLinkedList(unittest.TestCase):
 
     def test_single_node_list(self) -> None:
-        linky: LinkedList = LinkedList("eggs")
-        self.assertEqual(linky.head.value, "eggs")
+        value: str = "eggs"
+        linked_list: LinkedList = LinkedList(value)
+        self.assertEqual(linked_list.head.value, value)
 
     def test_multi_node_list(self) -> None:
-        items: list[str] = ["ham", "eggs", "green"]
-        linky: LinkedList = LinkedList(items[0])
-        linky.insert(items[1])
-        linky.insert(items[2])
-        temp_node: None | Node = linky.head
-        for i in range(len(items) - 1, -1, -1):
+        value1: str = "eggs"
+        value2: str = "ham"
+        value3: str = "green"
+        values: list[str] = [value1, value2, value3]
+        linked_list: LinkedList = LinkedList(value3)
+        linked_list.insert(value2)
+        linked_list.insert(value1)
+        temp_node: Node = linked_list.head
+        for i in range(len(values)):
             if temp_node:
-                self.assertEqual(temp_node.value, items[i])
+                self.assertEqual(temp_node.value, values[i])
                 temp_node = temp_node.next
-
-    def test_str(self) -> None:
-        linked_list = LinkedList("bar")
-        linked_list.insert("foo")
-        self.assertEqual(str(linked_list), "foo->bar")

@@ -1,11 +1,14 @@
+from typing import Any
+
+
 class Node:
     """
-    A node for a singly-linked list.
+    A node that stores a value in a singly-linked list.
     """
 
-    def __init__(self, value: object, next: "None | Node" = None) -> None:
+    def __init__(self, value: object, next: Any = None) -> None:
         self.value: object = value
-        self.next: None | Node = next
+        self.next: Any = next
 
 
 class LinkedList:
@@ -15,33 +18,14 @@ class LinkedList:
 
     def __init__(self, value: object) -> None:
         """
-        Parameters
-        ----------
-        value : object
-            The value of the first node.
+        Creates a new list with an initial value.
         """
         self.head: Node = Node(value)
 
     def insert(self, value: object) -> None:
         """
         Inserts a new value at the beginning of the list.
-
-        Parameters
-        ----------
-        value : object
-            The value of the new node.
         """
         new_head: Node = Node(value)
         new_head.next = self.head
         self.head = new_head
-
-    def __str__(self) -> str:
-        """
-        Returns the list as "head.value->next.value->next.value" etc.
-        """
-        node: None | Node = self.head
-        as_str: str = ""
-        while node:
-            as_str += str(node.value) + "->"
-            node = node.next
-        return as_str[:-2]

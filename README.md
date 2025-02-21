@@ -14,16 +14,18 @@ After you finish building the program, you will create a blog post to share the 
 
 Mapping Codecademy's requirements onto the music recommendation program gives the following:
 
-### Functional Requirement 1: Choose Music Category
-- The user enters the full or partial name of a music category they're interested in. For example, they might enter "rock" or "classic".
-- If the user's input is invalid or doesn't match any categories, they will be given the option of entering a new search or quitting the program.
-- If the user's input matches one category, they will be told the name of that category and shown a list of albums from that category.
-- If the user's input matches many categories, they will be shown a list of those categories and given the option of selecting one. For example, a search for "rock" might return a list of categories including "hard rock", "soft rock" and "rock & roll".
+### Functional Requirement 1: Choose a Music Category
+- The user enters the full or partial name of a music category they're interested in. For example, they might enter "rock" or "classical" or "b".
+- If the user's input doesn't match any categories, they will be asked to try again.
+- If the user's input matches one category, they have chosen that category.
+- If the user's input matches several categories, they will be shown a list of those categories from which they can choose one. For example, a search for "rock" might return a list of categories including "hard rock", "soft rock" and "rock & roll".
 
-### Functional Requirement 2: Show Albums
-- The user selects a specific music category using the Choose Music Category process.
-- The program shows the user a list of albums from that category.
-- The program then asks the user if they want to search again, or quit, and proceeds as requested.
+### Functional Requirement 2: Get Albums by Category
+- Once the user has selected one category, the program shows them a list of albums from that category.
+
+### Implicit Requirements
+- The program should validate user input.
+- The program should give the user the option of quitting or searching again.
 
 ### Technical Requirements
 As requested by Codecademy:
@@ -33,22 +35,36 @@ As requested by Codecademy:
 
 ## Architecture
 - Programming language: Python 3
-  - As required
-- User interface: Command line (required by Codecademy)
-  - As required
+  - As required by Codecademy.
+  - Type annotation: All of the code uses type annotation.
+- User interface: Command line
+  - As required by Codecademy.
 - Programming paradigm: Object-oriented and procedural
-  - Object-oriented because the program will use linked lists and I've learned to build linked-lists using an object-oriented approach.
-  - Procedural because this is a small program that can run as a simple "main" function.
-- Database: Python lists
-  - This was Codecademy's default choice so I went with that.
+  - Why object-oriented? Because the program will use hashmaps and linked lists and I've learned to build them using an object-oriented approach. It's also a good opportunity to practice designing and writing classes.
+  - Why procedural? Because the user interface will be coded in the main function.
+- Database: CSV file
+  - Codecademy's example database was a Python list of lists. I wanted to practice working with CSV files, so I've gone down that route.
 
 ## High-level design
+- Classes
+  - MusicDatabase: 
+    - A class that allows the user interface function to deal with database-related activities at a high level of abstraction.
+    - This class manages the conversion of the csv database file into a hashmap which maps music categories to linked lists of Album objects.
+  - Album:
+    - A dataclass that stores album data from the CSV file.
+  - HashMap:
+    - A hashmap that the MusicDatabase object uses to store linked lists of Album objects.
+  - Node:
+    - A node for use in a singly linked list.
+  - LinkedList:
+    - A singly linked list which the MusicDatabase object fills with Album objects.
+- Functions
+  - Main:
+    - Contains all of the user interface code.
+- Database
+  - music_database.csv
+    - I asked GitHub Copilot to build me a database of fictional albums with the some relevant fields (category, name, artist, release date). It performed this task admirably.
+    - Originally, I asked Copilot to build that data as a Python list of lists. I then decided to use csv instead, so I wrote a short script to convert the list of lists into csv format.
 
-The program will:
-- Use a "main" function to manage user interaction.
-- Use helper functions as needed to simplify the main function.
-- Store several pieces of album data in a list.
-- Store all of the album data lists for a category in an object-oriented linked list.
-  - The linked list will consist of Node and LinkedList classes.
-- Store the category linked lists in a hashmap keyed by category name.
-  - The hashmap will be implemented as a HashMap class that uses open addressing to resolve collisions. 
+## Unit testing
+All classes have related unit tests using the Python unittest module.

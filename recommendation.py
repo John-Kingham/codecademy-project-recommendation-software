@@ -1,66 +1,164 @@
-from music_database import categories
+from dataclasses import dataclass
+import csv
+from hashmap import HashMap
+from linked_list import LinkedList, Node
 
 
-def autocomplete(search: str) -> list[str]:
+@dataclass(order=True)
+class Album:
     """
-    Returns a list of music categories that match the user's input.
-
-    Parameters
-    ----------
-    search: str
-        What the user typed to search for one or more music categories.
-
-    Returns
-    -------
-    list: str
-        A list of category names that contain the user's search string.
-        If no categories are found the list is empty.
+    A data class that holds data related to an album.
     """
-    return [category for category in categories if search in category]
 
-# Function name: get_albums
-def get_albums(category: str) -> list[list[str]]:
+    category: str
+    name: str
+    artist: str
+    release_date: str
+
+
+class MusicDatabase:
     """
-    Given a music category, returns a list of albums from that category.
-
-    Parameters
-    ----------
-    category : str
-        The music category the albums should be from.
-
-    Returns
-    -------
-    list : a list of list[str]
-        blah.
+    A database of albums.
+    This class allows the user interface to deal with the music data at a higher level of
+    abstraction than linked lists and hashmaps.
     """
-    # This function needs to use either a Linked List, a Hash Map or a Tree.
-    # The albums in a category could be stored in a linked list.
-    # Each node's value would be the album list of four data items.
-    # We could store each linked list in a hash map, keyed by category name
 
-    # TODO
+    def __init__(self, filename: str) -> None:
+        """
+        Creates a new music database using data from a csv file.
 
-    # Before writing this function, we need a function to load the albums 
-    # for a given category into a linked list
-    return [[""],[""]]
+        Parameters
+        ----------
+        filename
+            The name of the csv file.
+        """
+
+        # load data from csv into a hashmap of linked lists
+
+        self.hashmap: HashMap = HashMap()
+        with open(filename, newline="") as music_file:
+            music_reader = csv.DictReader(music_file)
+            for row in music_reader:
+                album: Album = Album(
+                    row["Category"], row["Name"], row["Artist"], row["Release Date"]
+                )
+                album_list: LinkedList = self.hashmap.get(album.category)
+                if not album_list:
+                    album_list = LinkedList(album)
+                    self.hashmap.add(album.category, album_list)
+                else:
+                    album_list.insert(album)
+
+    def find_categories(self, search_string: str) -> list[str]:
+        """
+        Returns a list of category names that contain the search string.
+
+        Parameters
+        ----------
+        search_string
+            A full or partial category name which may match zero or more categories.
+
+        Returns
+        -------
+        list of category names
+            The category names that contain the search string. Empty if no matches are found.
+        """
+        categories: list[str] = []
+        for category in self.hashmap.keys():
+            if search_string in category:
+                categories.append(category)
+        return categories
+
+    def get_albums(self, category: str) -> list[Album]:
+        """
+        Given a music category, returns the albums from that category.
+
+        Parameters
+        ----------
+        category
+            The music category the albums should be from.
+
+        Returns
+        -------
+        list of Albums
+            The albums from the category. Empty if no matching albums are found.
+        """
+        category_albums: LinkedList = self.hashmap.get(category)
+        if not category_albums:
+            return []
+        album_list: list[Album] = []
+        node: Node = category_albums.head
+        more_nodes: bool = True
+        while more_nodes:
+            album_list.append(node.value)  # type: ignore
+            if node.next:
+                node = node.next
+            else:
+                more_nodes = False
+        return album_list
 
 
-def recommendation() -> None:
+def main() -> None:
     """
-    A basic recommendation program with a command-line interface.
+    This program is a basic music recommendation engine with a command-line interface.
 
-    Users can search for categories of interesting using partial search strings.
+    Users can search for categories of music using partial search strings.
     They're shown a list of matching categories.
     They can select a category and sell a list of albums in that category.
     """
-    # greet the user
-    # while the user hasn't quit
-    #   while there are no matching categories
-    #       ask for a partial category search string
-    #       if there were no matching categories
-    #           tell the user
-    #   show the user a numbered list of the matching categories
-    #   while user input is invalid
-    #       ask the user to pick a number from that list
-    #   show the user the list of albums from that category
-    #   ask the user if they want to quit or search again
+    database: MusicDatabase = MusicDatabase("music_database.csv")
+    print("Welcome to the Music Recommendation Engine\n")
+
+    # get the user to choose a single music category
+
+    quit: bool = False
+    while not quit:
+        chosen_category: str = ""
+        while not chosen_category:
+            search_string: str = input(
+                "Please enter all or part of the name of a music category you'd like to listen to:\n"
+            )
+            categories: list[str] = database.find_categories(search_string)
+            if len(categories) == 0:
+                print(
+                    "Sorry, your search didn't match any categories. Please try again.\n"
+                )
+                continue
+            if len(categories) == 1:
+                chosen_category = categories[0]
+                continue
+            print(
+                "Your search matches several categories. Please choose from the list of categories below by entering the related number.\n"
+            )
+            for i in range(len(categories)):
+                print(f"{i+1} : {categories[i]}")
+            while not chosen_category:
+                chosen_index: int = (
+                    int(input(f"\nEnter your choice (from 1 to {len(categories)}):\n"))
+                    - 1
+                )
+                if chosen_index not in range(len(categories)):
+                    print("Sorry, your choice wasn't valid. Please try again.\n")
+                    continue
+                chosen_category = categories[chosen_index]
+
+        # show the user a list of albums from their chosen category
+
+        print(f"You have chosen the {chosen_category} category.\n")
+        print("Here is a list of albums from that category.\n")
+        albums: list[Album] = database.get_albums(chosen_category)
+        for album in albums:
+            print(
+                f"Name: {album.name}, Artist: {album.artist}, Release Date: {album.release_date}"
+            )
+
+        # ask the user if they want to quit or search again
+
+        choice: str = input("\nTo search again, enter any letter. To quit, enter q:\n")
+        if choice == "q":
+            print("Thank you for using the music recommendation engine. Goodbye...")
+            quit = True
+
+
+if __name__ == "__main__":
+    main()
