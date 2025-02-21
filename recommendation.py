@@ -107,7 +107,7 @@ def main() -> None:
     They can select a category and sell a list of albums in that category.
     """
     database: MusicDatabase = MusicDatabase("music_database.csv")
-    print("Welcome to the Music Recommendation Engine\n")
+    print("\nWelcome to the Music Recommendation Engine\n")
 
     # get the user to choose a single music category
 
@@ -144,7 +144,7 @@ def main() -> None:
 
         # show the user a list of albums from their chosen category
 
-        print(f"You have chosen the {chosen_category} category.\n")
+        print(f"\nYou have chosen the {chosen_category} category.\n")
         print("Here is a list of albums from that category.\n")
         albums: list[Album] = database.get_albums(chosen_category)
         for album in albums:
